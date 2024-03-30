@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criação de Personagem</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .race-modifier {
+            color: blue; /* Cor do modificador de raça */
+        }
+        .class-modifier {
+            color: green; /* Cor do modificador de classe */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Criação de Personagem</h2>
+    <form id="characterForm">
+        <div class="mb-3">
+            <label for="playerName" class="form-label">Seu Nome</label>
+            <input type="text" class="form-control" id="playerName" required>
+        </div>
+        <div class="mb-3">
+            <label for="characterName" class="form-label">Nome do Personagem</label>
+            <input type="text" class="form-control" id="characterName" required>
+        </div>
+        <div class="mb-3">
+            <label for="characterClass" class="form-label">Classe</label>
+            <select class="form-select" id="characterClass" required>
+                <option value="" selected disabled>Selecione uma classe</option>
+                <option value="barbarian">Bárbaro</option>
+                <option value="bard">Bardo</option>
+                <option value="warlock">Bruxo</option>
+                <option value="cleric">Clérigo</option>
+                <option value="druid">Druida</option>
+                <option value="sorcerer">Feiticeiro</option>
+                <option value="fighter">Guerreiro</option>
+                <option value="rogue">Ladino</option>
+                <option value="wizard">Mago</option>
+                <option value="monk">Monge</option>
+                <option value="paladin">Paladino</option>
+                <option value="ranger">Ranger</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="characterRace" class="form-label">Raça</label>
+            <select class="form-select" id="characterRace" required>
+                <option value="" selected disabled>Selecione uma raça</option>
+                <option value="human">Humano</option>
+                <option value="elf">Elfo</option>
+                <option value="dwarf">Anão</option>
+                <option value="gnome">Gnomo</option>
+                <option value="halfElf">Meio-Elfo</option>
+                <option value="halfOrc">Meio-Orc</option>
+                <option value="halfling">Halfling</option>
+                <option value="tiefling">Tiefling</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="characterBackground" class="form-label">Background do Personagem</label>
+            <textarea class="form-control" id="characterBackground" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Criar Personagem</button>
+        <a href="index.html" class="btn btn-dark">Voltar ao início</a>
+    </form>
+</div>
+
+<div class="container mt-5" id="characterCard" style="display: none;">
+    <div class="card" style="width: 18rem;">
+        <img src="" class="card-img-top" alt="Imagem do Personagem">
+        <div class="card-body">
+            <h5 class="card-title" id="characterNameDisplay"></h5>
+            <p class="card-text" id="characterInfo"></p>
+            <button id="addImageButton" class="btn btn-primary">Adicionar Imagem</button>
+            <button id="viewBackgroundButton" class="btn btn-secondary">Ver História</button>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle com Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    // Array para armazenar temporariamente os personagens criados
+    let characters = [];
+
+    document.getElementById('characterForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar o envio do formulário
+        
+        // Pegar os valores dos campos do formulário
+        const playerName = document.getElementById('playerName').value;
+        const characterName = document.getElementById('characterName').value;
+        const characterClass = document.getElementById('characterClass').value;
+        const characterRace = document.getElementById('characterRace').value;
+        const characterBackground = document.getElementById('characterBackground').value;
+        
+        // Simular a busca de uma imagem na internet (para fins de demonstração, usaremos uma URL estática)
+        const imageUrl = "https://via.placeholder.com/300"; // URL da imagem (altere conforme necessário)
+        
+        // Definir os atributos com base na classe e raça selecionadas (simplificado)
+        let strength = 10;
+        let dexterity = 10;
+        let constitution = 10;
+        let intelligence = 10;
+        let wisdom = 10;
+        let charisma = 10;
+
+        // Aqui você pode adicionar lógica para ajustar os atributos com base na classe e raça selecionadas
+        
+        // Calcular os modificadores de raça e classe
+        const raceModifier = calculateRaceModifier(characterRace);
+        const classModifier = calculateClassModifier(characterClass);
+        
+        // Exibir os resultados com os modificadores de cor diferente
+        document.getElementById('characterNameDisplay').textContent = characterName;
+        document.getElementById('characterInfo').innerHTML = `
+            <strong>Classe:</strong> <span class="class-modifier">${characterClass} (${classModifier})</span><br>
+            <strong>Raça:</strong> <span class="race-modifier">${characterRace} (${raceModifier})</span><br>
+            <strong>Atributos:</strong><br>
+            - Força: ${strength}<br>
+            - Destreza: ${dexterity}<br>
+            - Constituição: ${constitution}<br>
+            - Inteligência: ${intelligence}<br>
+            - Sabedoria: ${wisdom}<br>
+            - Carisma: ${charisma}<br>
+            <strong>Background:</strong><br>
+            ${characterBackground}
+        `;
+        document.querySelector('#characterCard img').src = imageUrl;
+        document.getElementById('characterCard').style.display = 'block';
+
+        // Salvar o personagem temporariamente
+        const character = {
+            playerName,
+            characterName,
+            characterClass,
+            characterRace,
+            characterBackground
+        };
+        characters.push(character);
+    });
+
+    // Função para calcular o modificador de raça
+    function calculateRaceModifier(race) {
+        // Implemente a lógica para calcular o modificador de raça com base na raça selecionada
+        // Por enquanto, apenas retornaremos um valor fixo para demonstração
+        return '+2';
+    }
+
+    // Função para calcular o modificador de classe
+    function calculateClassModifier(characterClass) {
+        // Implemente a lógica para calcular o modificador de classe com base na classe selecionada
+        // Por enquanto, apenas retornaremos um valor fixo para demonstração
+        return '+1';
+    }
+
+    // Adicionar funcionalidade ao botão "Adicionar Imagem"
+    document.getElementById('addImageButton').addEventListener('click', function() {
+        const imageUrl = prompt("Insira a URL da imagem:");
+        if (imageUrl) {
+            document.querySelector('#characterCard img').src = imageUrl;
+        }
+    });
+
+    // Adicionar funcionalidade ao botão "Ver História"
+    document.getElementById('viewBackgroundButton').addEventListener('click', function() {
+        // Exibir o background do personagem em um alerta para demonstração
+        const characterBackground = document.getElementById('characterBackground').value;
+        alert(characterBackground);
+    });
+</script>
+
+</body>
+</html>
